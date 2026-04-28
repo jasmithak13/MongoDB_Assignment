@@ -1,0 +1,39 @@
+// 1. Insert 5 booking documents using insertMany()
+db.bookings.insertMany([
+  { booking_id: "BK001", event_name: "Rock Concert 2026", event_date: new Date("2026-11-15"), venue: "Mumbai Arena", customer_name: "Anil Kumar", ticket_type: "VIP", number_of_tickets: 2, total_price: 10000, booking_date: new Date("2026-04-20"), payment_status: "Paid" },
+  { booking_id: "BK002", event_name: "Tech Conference", event_date: new Date("2026-12-01"), venue: "Delhi Convention Center", customer_name: "Priya Sharma", ticket_type: "General", number_of_tickets: 3, total_price: 4500, booking_date: new Date("2026-04-15"), payment_status: "Paid" },
+  { booking_id: "BK003", event_name: "Comedy Night", event_date: new Date("2026-04-25"), venue: "Bangalore Auditorium", customer_name: "Rahul Verma", ticket_type: "Student", number_of_tickets: 4, total_price: 2000, booking_date: new Date("2026-04-10"), payment_status: "Paid" },
+  { booking_id: "BK004", event_name: "Art Exhibition", event_date: new Date("2026-10-10"), venue: "Chennai Gallery", customer_name: "Sneha Patel", ticket_type: "General", number_of_tickets: 2, total_price: 1500, booking_date: new Date("2023-06-01"), payment_status: "Pending" },
+  { booking_id: "BK005", event_name: "Rock Concert 2026", event_date: new Date("2026-11-15"), venue: "Mumbai Arena", customer_name: "Vikram Singh", ticket_type: "VIP", number_of_tickets: 4, total_price: 20000, booking_date: new Date("2026-04-25"), payment_status: "Paid" }
+]);
+
+// 2. Find all bookings where event_date after "2026-10-01" AND payment_status is "Paid"
+db.bookings.find({
+  event_date: { $gt: new Date("2026-10-01") },
+  payment_status: "Paid"
+});
+
+// 3. Update payment_status to "Refunded" for all bookings where event_date before today AND payment_status is "Paid"
+db.bookings.updateMany(
+  {
+    event_date: { $lt: new Date() },
+    payment_status: "Paid"
+  },
+  { $set: { payment_status: "Refunded" } }
+);
+
+// 4. Delete all bookings with payment_status "Pending" AND booking_date before "2024-01-01"
+db.bookings.deleteMany({
+  payment_status: "Pending",
+  booking_date: { $lt: new Date("2024-01-01") }
+});
+
+// 5. Use aggregation to calculate total number_of_tickets sold per event_name
+db.bookings.aggregate([
+  {
+    $group: {
+      _id: "$event_name",
+      total_tickets_sold: { $sum: "$number_of_tickets" }
+    }
+  }
+]);
