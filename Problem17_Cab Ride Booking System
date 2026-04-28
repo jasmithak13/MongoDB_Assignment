@@ -1,0 +1,35 @@
+// 1. Insert 5 ride documents using insertMany()
+db.rides.insertMany([
+  { ride_id: "RIDE001", rider_name: "Anil Kumar", driver_name: "Raj Singh", pickup_location: "Andheri", drop_location: "Bandra", ride_date: new Date("2026-04-28"), distance_km: 8, fare: 250, ride_status: "Requested" },
+  { ride_id: "RIDE002", rider_name: "Priya Sharma", driver_name: "Vikram Patel", pickup_location: "Dadar", drop_location: "Kurla", ride_date: new Date("2026-04-28"), distance_km: 5, fare: 150, ride_status: "Accepted" },
+  { ride_id: "RIDE003", rider_name: "Rahul Verma", driver_name: "Amit Shah", pickup_location: "Powai", drop_location: "Thane", ride_date: new Date("2026-04-27"), distance_km: 15, fare: 450, ride_status: "Completed" },
+  { ride_id: "RIDE004", rider_name: "Sneha Nair", driver_name: null, pickup_location: "Churchgate", drop_location: null, ride_date: new Date("2024-05-01"), distance_km: 12, fare: 350, ride_status: "Cancelled" },
+  { ride_id: "RIDE005", rider_name: "Kavya Reddy", driver_name: "Suresh Rao", pickup_location: "Juhu", drop_location: "Versova", ride_date: new Date("2026-04-28"), distance_km: 3, fare: 100, ride_status: "Requested" }
+]);
+
+// 2. Find all rides with ride_status "Requested" AND ride_date is today
+db.rides.find({
+  ride_status: "Requested",
+  ride_date: {
+    $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+    $lt: new Date(new Date().setHours(23, 59, 59, 999))
+  }
+});
+
+// 3. Update ride_status to "Completed" for all rides where drop_location is not null
+db.rides.updateMany(
+  { drop_location: { $ne: null } },
+  { $set: { ride_status: "Completed" } }
+);
+
+// 4. Delete all rides with ride_status "Cancelled" AND ride_date before "2024-06-01"
+db.rides.deleteMany({
+  ride_status: "Cancelled",
+  ride_date: { $lt: new Date("2024-06-01") }
+});
+
+// 5. Find all rides where distance_km greater than 10 AND fare greater than ₹300
+db.rides.find({
+  distance_km: { $gt: 10 },
+  fare: { $gt: 300 }
+});
