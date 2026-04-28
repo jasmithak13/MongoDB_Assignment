@@ -1,0 +1,31 @@
+// 1. Insert 5 equipment documents using insertMany()
+db.equipment.insertMany([
+  { equip_id: "EQ001", equip_name: "Treadmill", category: "Cardio", purchase_date: new Date("2020-01-15"), last_maintenance_date: new Date("2025-03-01"), next_maintenance_date: new Date("2025-09-01"), condition: "Good" },
+  { equip_id: "EQ002", equip_name: "Elliptical", category: "Cardio", purchase_date: new Date("2018-06-01"), last_maintenance_date: new Date("2024-12-01"), next_maintenance_date: new Date("2025-06-01"), condition: "NeedsService" },
+  { equip_id: "EQ003", equip_name: "Bench Press", category: "Strength", purchase_date: new Date("2019-03-20"), last_maintenance_date: new Date("2025-02-15"), next_maintenance_date: new Date("2025-08-15"), condition: "Good" },
+  { equip_id: "EQ004", equip_name: "Rowing Machine", category: "Cardio", purchase_date: new Date("2014-09-01"), last_maintenance_date: new Date("2023-06-01"), next_maintenance_date: new Date("2024-01-01"), condition: "OutOfOrder" },
+  { equip_id: "EQ005", equip_name: "Dumbbells Set", category: "Strength", purchase_date: new Date("2021-11-10"), last_maintenance_date: new Date("2025-01-10"), next_maintenance_date: new Date("2025-07-10"), condition: "Good" }
+]);
+
+// 2. Find all equipment where condition is "NeedsService" OR "OutOfOrder"
+db.equipment.find({
+  $or: [
+    { condition: "NeedsService" },
+    { condition: "OutOfOrder" }
+  ]
+});
+
+// 3. Update condition to "Good" for all equipment where last_maintenance_date after "2025-01-01"
+db.equipment.updateMany(
+  { last_maintenance_date: { $gt: new Date("2025-01-01") } },
+  { $set: { condition: "Good" } }
+);
+
+// 4. Delete all equipment where purchase_date before "2015-01-01" AND condition is "OutOfOrder"
+db.equipment.deleteMany({
+  purchase_date: { $lt: new Date("2015-01-01") },
+  condition: "OutOfOrder"
+});
+
+// 5. Find all equipment sorted by next_maintenance_date ascending
+db.equipment.find().sort({ next_maintenance_date: 1 });
