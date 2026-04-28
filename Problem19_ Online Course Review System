@@ -1,0 +1,32 @@
+// 1. Insert 5 review documents using insertMany()
+db.reviews.insertMany([
+  { review_id: "REV001", course_name: "MongoDB Basics", student_name: "Anil Kumar", rating: 5, review_text: "Excellent course!", review_date: new Date("2026-04-15"), likes_count: 25, is_verified_purchase: true },
+  { review_id: "REV002", course_name: "Python for Beginners", student_name: "Priya Sharma", rating: 4, review_text: "Very helpful content", review_date: new Date("2026-04-10"), likes_count: 15, is_verified_purchase: true },
+  { review_id: "REV003", course_name: "Advanced MongoDB", student_name: "Rahul Verma", rating: 3, review_text: "Good but needs more examples", review_date: new Date("2026-03-20"), likes_count: 8, is_verified_purchase: false },
+  { review_id: "REV004", course_name: "JavaScript Masterclass", student_name: "Sneha Patel", rating: 1, review_text: "Not what I expected", review_date: new Date("2023-06-01"), likes_count: 2, is_verified_purchase: false },
+  { review_id: "REV005", course_name: "Data Science with Python", student_name: "Vikram Singh", rating: 5, review_text: "Highly recommended!", review_date: new Date("2026-04-25"), likes_count: 50, is_verified_purchase: true }
+]);
+
+// 2. Find all reviews with rating greater than 4 AND likes_count greater than 10
+db.reviews.find({
+  rating: { $gt: 4 },
+  likes_count: { $gt: 10 }
+});
+
+// 3. Update is_verified_purchase to true for all reviews where course_name contains "MongoDB"
+db.reviews.updateMany(
+  { course_name: { $regex: /MongoDB/i } },
+  { $set: { is_verified_purchase: true } }
+);
+
+// 4. Delete all reviews where review_date before "2024-01-01" AND rating is 1
+db.reviews.deleteMany({
+  review_date: { $lt: new Date("2024-01-01") },
+  rating: 1
+});
+
+// 5. Find all reviews sorted by rating descending, display course_name, student_name, rating
+db.reviews.find(
+  {},
+  { course_name: 1, student_name: 1, rating: 1, _id: 0 }
+).sort({ rating: -1 });
