@@ -1,0 +1,36 @@
+// 1. Insert 5 playlist documents using insertMany()
+db.playlists.insertMany([
+  { playlist_id: "PL001", user_name: "Anil Kumar", playlist_name: "Morning Vibes", songs: [{ title: "Shape of You", artist: "Ed Sheeran" }, { title: "Blinding Lights", artist: "The Weeknd" }], created_date: new Date("2026-01-15"), total_duration_minutes: 45, is_public: true, play_count: 150 },
+  { playlist_id: "PL002", user_name: "Priya Sharma", playlist_name: "Workout Mix", songs: [{ title: "Eye of the Tiger", artist: "Survivor" }, { title: "Stronger", artist: "Kanye West" }, { title: "Lose Yourself", artist: "Eminem" }], created_date: new Date("2026-02-20"), total_duration_minutes: 60, is_public: true, play_count: 200 },
+  { playlist_id: "PL003", user_name: "Anil Kumar", playlist_name: "Chill Evening", songs: [{ title: "Stay", artist: "Rihanna" }], created_date: new Date("2022-06-01"), total_duration_minutes: 30, is_public: false, play_count: 50 },
+  { playlist_id: "PL004", user_name: "Rahul Verma", playlist_name: "Road Trip", songs: [{ title: "Hotel California", artist: "Eagles" }, { title: "Sweet Home Alabama", artist: "Lynyrd Skynyrd" }], created_date: new Date("2026-03-10"), total_duration_minutes: 90, is_public: true, play_count: 80 },
+  { playlist_id: "PL005", user_name: "Priya Sharma", playlist_name: "Study Focus", songs: [{ title: "Weightless", artist: "Marconi Union" }], created_date: new Date("2026-04-01"), total_duration_minutes: 120, is_public: false, play_count: 300 }
+]);
+
+// 2. Find all playlists where is_public is true AND play_count greater than 100
+db.playlists.find({
+  is_public: true,
+  play_count: { $gt: 100 }
+});
+
+// 3. Update play_count by incrementing 1 for a specific playlist_id
+db.playlists.updateOne(
+  { playlist_id: "PL001" },
+  { $inc: { play_count: 1 } }
+);
+
+// 4. Delete all playlists where created_date before "2023-01-01" AND is_public is false
+db.playlists.deleteMany({
+  created_date: { $lt: new Date("2023-01-01") },
+  is_public: false
+});
+
+// 5. Use aggregation to find average total_duration_minutes per user
+db.playlists.aggregate([
+  {
+    $group: {
+      _id: "$user_name",
+      avg_duration: { $avg: "$total_duration_minutes" }
+    }
+  }
+]);
