@@ -1,0 +1,29 @@
+// 1. Insert 5 rider documents using insertMany()
+db.riders.insertMany([
+  { rider_id: "RDR001", rider_name: "Raj Singh", city: "Mumbai", vehicle_type: "Bike", total_deliveries: 250, average_rating: 4.8, current_status: "Available", earnings_today: 850, delivery_history: ["ORD001", "ORD002", "ORD003"] },
+  { rider_id: "RDR002", rider_name: "Amit Patel", city: "Delhi", vehicle_type: "Scooter", total_deliveries: 180, average_rating: 4.5, current_status: "Busy", earnings_today: 650, delivery_history: ["ORD004", "ORD005"] },
+  { rider_id: "RDR003", rider_name: "Suresh Kumar", city: "Mumbai", vehicle_type: "Bike", total_deliveries: 0, average_rating: 0, current_status: "Offline", earnings_today: 0, delivery_history: [] },
+  { rider_id: "RDR004", rider_name: "Vikram Rao", city: "Bangalore", vehicle_type: "Scooter", total_deliveries: 320, average_rating: 4.9, current_status: "Available", earnings_today: 1200, delivery_history: ["ORD006", "ORD007", "ORD008", "ORD009"] },
+  { rider_id: "RDR005", rider_name: "Kiran Reddy", city: "Hyderabad", vehicle_type: "Bike", total_deliveries: 15, average_rating: 4.2, current_status: "Offline", earnings_today: 200, delivery_history: ["ORD010"] }
+]);
+
+// 2. Find all riders where current_status is "Available" AND average_rating greater than 4.5
+db.riders.find({
+  current_status: "Available",
+  average_rating: { $gt: 4.5 }
+});
+
+// 3. Update earnings_today by adding ₹100 to all riders with total_deliveries greater than 20
+db.riders.updateMany(
+  { total_deliveries: { $gt: 20 } },
+  { $inc: { earnings_today: 100 } }
+);
+
+// 4. Delete all riders where current_status is "Offline" AND total_deliveries is 0
+db.riders.deleteMany({
+  current_status: "Offline",
+  total_deliveries: 0
+});
+
+// 5. Create a multikey index on delivery_history array field
+db.riders.createIndex({ delivery_history: 1 });
