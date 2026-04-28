@@ -1,0 +1,32 @@
+// 1. Insert 5 prescription documents using insertMany()
+db.prescriptions.insertMany([
+  { prescription_id: "RX001", patient_name: "Anil Mehta", doctor_name: "Dr. Sharma", medicine_name: "Paracetamol", dosage: "500mg", issue_date: new Date("2026-04-01"), expiry_date: new Date("2026-10-01"), status: "Active" },
+  { prescription_id: "RX002", patient_name: "Priya Kumar", doctor_name: "Dr. Patel", medicine_name: "Amoxicillin", dosage: "250mg", issue_date: new Date("2026-03-15"), expiry_date: new Date("2026-04-15"), status: "Expired" },
+  { prescription_id: "RX003", patient_name: "Rahul Singh", doctor_name: "Dr. Nair", medicine_name: "Metformin", dosage: "850mg", issue_date: new Date("2026-04-20"), expiry_date: new Date("2027-04-20"), status: "Active" },
+  { prescription_id: "RX004", patient_name: "Sneha Reddy", doctor_name: "Dr. Gupta", medicine_name: "Aspirin", dosage: "75mg", issue_date: new Date("2023-06-01"), expiry_date: new Date("2024-06-01"), status: "Fulfilled" },
+  { prescription_id: "RX005", patient_name: "Vikram Rao", doctor_name: "Dr. Shah", medicine_name: "Omeprazole", dosage: "20mg", issue_date: new Date("2026-04-25"), expiry_date: new Date("2026-07-25"), status: "Active" }
+]);
+
+// 2. Find all prescriptions with status "Active" AND expiry_date after today
+db.prescriptions.find({
+  status: "Active",
+  expiry_date: { $gt: new Date() }
+});
+
+// 3. Update status to "Expired" for all prescriptions where expiry_date before today
+db.prescriptions.updateMany(
+  { expiry_date: { $lt: new Date() } },
+  { $set: { status: "Expired" } }
+);
+
+// 4. Delete all prescriptions with status "Fulfilled" AND issue_date before "2024-01-01"
+db.prescriptions.deleteMany({
+  status: "Fulfilled",
+  issue_date: { $lt: new Date("2024-01-01") }
+});
+
+// 5. Find all prescriptions sorted by issue_date descending, display patient_name, medicine_name, status
+db.prescriptions.find(
+  {},
+  { patient_name: 1, medicine_name: 1, status: 1, _id: 0 }
+).sort({ issue_date: -1 });
