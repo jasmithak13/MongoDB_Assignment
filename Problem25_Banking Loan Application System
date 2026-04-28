@@ -1,0 +1,37 @@
+// 1. Insert 5 loan documents using insertMany()
+db.loans.insertMany([
+  { loan_id: "LOAN001", applicant_name: "Anil Kumar", loan_type: "Home", loan_amount: 5000000, interest_rate: 8.5, tenure_months: 240, application_date: new Date("2026-04-01"), approval_status: "Pending", credit_score: 780 },
+  { loan_id: "LOAN002", applicant_name: "Priya Sharma", loan_type: "Car", loan_amount: 800000, interest_rate: 9.0, tenure_months: 60, application_date: new Date("2026-03-15"), approval_status: "Approved", credit_score: 720 },
+  { loan_id: "LOAN003", applicant_name: "Rahul Verma", loan_type: "Personal", loan_amount: 300000, interest_rate: 12.5, tenure_months: 36, application_date: new Date("2022-06-01"), approval_status: "Rejected", credit_score: 620 },
+  { loan_id: "LOAN004", applicant_name: "Sneha Patel", loan_type: "Home", loan_amount: 3500000, interest_rate: 8.0, tenure_months: 180, application_date: new Date("2026-04-20"), approval_status: "Pending", credit_score: 760 },
+  { loan_id: "LOAN005", applicant_name: "Vikram Singh", loan_type: "Personal", loan_amount: 500000, interest_rate: 11.0, tenure_months: 48, application_date: new Date("2026-04-25"), approval_status: "Approved", credit_score: 800 }
+]);
+
+// 2. Find all loans where approval_status is "Pending" AND credit_score greater than 700
+db.loans.find({
+  approval_status: "Pending",
+  credit_score: { $gt: 700 }
+});
+
+// 3. Update approval_status to "Approved" for all loans where credit_score greater than 750
+db.loans.updateMany(
+  { credit_score: { $gt: 750 } },
+  { $set: { approval_status: "Approved" } }
+);
+
+// 4. Delete all loans where application_date before "2023-01-01" AND approval_status is "Rejected"
+db.loans.deleteMany({
+  application_date: { $lt: new Date("2023-01-01") },
+  approval_status: "Rejected"
+});
+
+// 5. Use aggregation to calculate average loan_amount per loan_type for approved loans only
+db.loans.aggregate([
+  { $match: { approval_status: "Approved" } },
+  {
+    $group: {
+      _id: "$loan_type",
+      avg_loan_amount: { $avg: "$loan_amount" }
+    }
+  }
+]);
