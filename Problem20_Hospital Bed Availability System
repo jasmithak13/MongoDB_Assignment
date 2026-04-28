@@ -1,0 +1,39 @@
+// 1. Insert 5 bed documents using insertMany()
+db.beds.insertMany([
+  { bed_id: "BED001", ward_name: "General", bed_type: "General", is_occupied: true, patient_name: "Anil Mehta", admission_date: new Date("2026-04-25"), expected_discharge_date: new Date("2026-04-30") },
+  { bed_id: "BED002", ward_name: "ICU", bed_type: "ICU", is_occupied: false, patient_name: null, admission_date: null, expected_discharge_date: null },
+  { bed_id: "BED003", ward_name: "ICU", bed_type: "ICU", is_occupied: true, patient_name: "Priya Kumar", admission_date: new Date("2026-04-20"), expected_discharge_date: new Date("2026-04-27") },
+  { bed_id: "BED004", ward_name: "Private", bed_type: "Private", is_occupied: false, patient_name: null, admission_date: null, expected_discharge_date: null },
+  { bed_id: "BED005", ward_name: "General", bed_type: "General", is_occupied: true, patient_name: "Rahul Singh", admission_date: new Date("2026-04-28"), expected_discharge_date: new Date("2026-05-02") }
+]);
+
+// 2. Find all beds where is_occupied is false AND ward_name is "ICU"
+db.beds.find({
+  is_occupied: false,
+  ward_name: "ICU"
+});
+
+// 3. Update is_occupied to true and set patient_name for beds where admission_date is today
+db.beds.updateMany(
+  {
+    admission_date: {
+      $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+      $lt: new Date(new Date().setHours(23, 59, 59, 999))
+    }
+  },
+  {
+    $set: { is_occupied: true, patient_name: "New Patient" }
+  }
+);
+
+// 4. Delete all beds where expected_discharge_date before today AND is_occupied is true
+db.beds.deleteMany({
+  expected_discharge_date: { $lt: new Date() },
+  is_occupied: true
+});
+
+// 5. Find all beds sorted by bed_type, display ward_name, bed_type, is_occupied
+db.beds.find(
+  {},
+  { ward_name: 1, bed_type: 1, is_occupied: 1, _id: 0 }
+).sort({ bed_type: 1 });
