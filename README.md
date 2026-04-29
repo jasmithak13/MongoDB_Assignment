@@ -1,12 +1,5 @@
 # MongoDB_Assignment
 
-# Student Details
-JASMITHA K
-25BSR00226
-BSc DSA
-MongoDB
-JAIN UNIVERSITY
-
 # About This Assignment
 This assignment contains 30 MongoDB problems covering basic to advanced 
 database operations like CRUD, aggregation, indexing, and array queries.
